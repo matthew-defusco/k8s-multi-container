@@ -24,17 +24,6 @@ jobs:
           docker build -t matthewdefusco/react-test -f ./client/Dockerfile.dev ./client
           docker run -e CI=true matthewdefusco/react-test npm test
 
-      # - name: Set Identity Provider
-      #   uses: 'google-github-actions/auth@v0'
-      #   with:
-      #     workload_identity_provider: 'projects/483100437721/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-      #     service_account: 'gh-deployer@multi-338920.iam.gserviceaccount.com'
-
-      # - name: Set Service Key
-      #   uses: "google-github-actions/auth@v0"
-      #   with:
-      #     credentials_json: "${{ secrets.GKE_SA_KEY }}"
-
       - name: Set Identity Provider
         uses: "google-github-actions/auth@v2"
         with:
@@ -55,20 +44,6 @@ jobs:
         with:
           cluster_name: multi-cluster
           location: us-central1-c
-      # - name: Set Project
-      #   uses: google-github-actions/setup-gcloud@v0
-      #   with:
-      #     project_id: kubernetes-tutorial-452820
-
-      # - name: Auth
-      #   run: |-
-      #     gcloud --quiet auth configure-docker
-
-      # - name: Get Credentials
-      #   uses: google-github-actions/get-gke-credentials@v0
-      #   with:
-      #     cluster_name: multi-cluster
-      #     location: us-central1-c
 
       - name: Build
         run: |-
