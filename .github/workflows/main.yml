@@ -39,7 +39,7 @@ jobs:
         uses: "google-github-actions/auth@v2"
         with:
           workload_identity_provider: "projects/35573725839/locations/global/workloadIdentityPools/github/providers/my-repo"
-          service_account: "gh-deployer@multi-338920.iam.gserviceaccount.com"
+          service_account: "gh-deployer@kubernetes-tutorial-452820.iam.gserviceaccount.com"
 
       - name: Set Project
         uses: google-github-actions/setup-gcloud@v2
