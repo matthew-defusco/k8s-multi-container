@@ -74,6 +74,25 @@ The rules in the ingress-service file specify two different things:
 - If traffic comes in that ends in "/api" then forward it to the server-cluster-ip-service.
   - In addition, in the annotations section, there is a declaration to "rewrite-target" which means that the path of request that comes in should be rewritten when it gets to it's target. This would be changing the request from "/api" to just "/".
 
+## Using HTTPS instead of HTTP
+
+### Getting a certification from LetsEncrypt
+
+Would need to make a request to the LE API for them to verify that we own the website. Once they validate that, they will respond with a certificate.
+
+This connection and process can be facilitated using a Helm package called Cert Manager. Cert Manager will create a pod that has route handlers that are able to deal with the incoming LE requests and reconfigure things in the pod as needed when it receives the certificate.
+
+In order to set up Cert Manager to request the certificate from LE and then to handle the inbound requests the way we want and configure the rest of the cluster with the certificate, two new objects needed to be created:
+
+1. Certificate
+   1. Information that has the details of the TLS certficate.
+   2. Will ultimately create a Kubernetes Secret that will hold the certificate.
+2. Issuer
+   1. A config file that tells the cert manager how to reach out to a certificate authority and obtain a certificate.
+   2. Tells Cert Manager which certificate authority to reach out to and in which environment (staging, prod, etc.)
+
+In addition, the Ingress needs to be updated to serve up HTTPS traffic and to know where to look for the Secret that houses the TLS certificate.
+
 ### Quick Notes
 
 There are different implementations of an Ingress but this project uses specifically an Nginx Ingress (ingress-nginx NOT kubernetes-ingress).
