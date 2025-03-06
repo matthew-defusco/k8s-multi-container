@@ -10,6 +10,11 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
     steps:
       - uses: actions/checkout@v3
 
@@ -19,13 +24,25 @@ jobs:
           docker build -t matthewdefusco/react-test -f ./client/Dockerfile.dev ./client
           docker run -e CI=true matthewdefusco/react-test npm test
 
-      - name: Set Service Key
-        uses: "google-github-actions/auth@v0"
+      # - name: Set Identity Provider
+      #   uses: 'google-github-actions/auth@v0'
+      #   with:
+      #     workload_identity_provider: 'projects/483100437721/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+      #     service_account: 'gh-deployer@multi-338920.iam.gserviceaccount.com'
+
+      # - name: Set Service Key
+      #   uses: "google-github-actions/auth@v0"
+      #   with:
+      #     credentials_json: "${{ secrets.GKE_SA_KEY }}"
+
+      - name: Set Identity Provider
+        uses: "google-github-actions/auth@v2"
         with:
-          credentials_json: "${{ secrets.GKE_SA_KEY }}"
+          workload_identity_provider: "projects/35573725839/locations/global/workloadIdentityPools/github/providers/my-repo"
+          service_account: "gh-deployer@multi-338920.iam.gserviceaccount.com"
 
       - name: Set Project
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: kubernetes-tutorial-452820
 
@@ -34,10 +51,24 @@ jobs:
           gcloud --quiet auth configure-docker
 
       - name: Get Credentials
-        uses: google-github-actions/get-gke-credentials@v0
+        uses: google-github-actions/get-gke-credentials@v2
         with:
           cluster_name: multi-cluster
           location: us-central1-c
+      # - name: Set Project
+      #   uses: google-github-actions/setup-gcloud@v0
+      #   with:
+      #     project_id: kubernetes-tutorial-452820
+
+      # - name: Auth
+      #   run: |-
+      #     gcloud --quiet auth configure-docker
+
+      # - name: Get Credentials
+      #   uses: google-github-actions/get-gke-credentials@v0
+      #   with:
+      #     cluster_name: multi-cluster
+      #     location: us-central1-c
 
       - name: Build
         run: |-
