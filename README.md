@@ -91,7 +91,11 @@ In order to set up Cert Manager to request the certificate from LE and then to h
    1. A config file that tells the cert manager how to reach out to a certificate authority and obtain a certificate.
    2. Tells Cert Manager which certificate authority to reach out to and in which environment (staging, prod, etc.)
 
-In addition, the Ingress needs to be updated to serve up HTTPS traffic and to know where to look for the Secret that houses the TLS certificate.
+### Updates to the Ingress to switch over to HTTPS
+
+In addition to getting the certificate, the Ingress needs to be updated to serve up HTTPS traffic and to know where to look for the Secret that houses the TLS certificate.
+
+You do this by adding some annotations to the ingress config to say that all traffic should use a secure connection and the name of the secret where it can find the cert in the cluster.
 
 ### Quick Notes
 

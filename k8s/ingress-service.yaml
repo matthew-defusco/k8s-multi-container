@@ -5,10 +5,17 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - k8s.defus.co
+      secretName: k8s-defus-co
   rules:
-    - http:
+    - host: k8s.defus.co
+      http:
         paths:
           - path: /?(.*)
             pathType: ImplementationSpecific
